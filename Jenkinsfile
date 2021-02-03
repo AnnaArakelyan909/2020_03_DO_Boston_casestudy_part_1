@@ -37,7 +37,6 @@ pipeline {
 
               script { 
 
-                  // dockerImage = docker.build Docker_Hub + ":$BUILD_NUMBER"
                   checkout scm
                   sh 'docker image build -t $Docker_Hub:latest .'
                   sh 'docker image tag $Docker_Hub:latest $Docker_Hub:$BUILD_NUMBER'
@@ -55,9 +54,10 @@ pipeline {
               script { 
 
                   docker.withRegistry( '', Docker_Hub_Credential ) { 
-
-                      dockerImage.push() 
-
+				  
+					  sh 'docker push $Docker_Hub:$BUILD_NUMBER'
+					  sh 'docker push $Docker_Hub:latest'
+					  
                   }
 
               } 
