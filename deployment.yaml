@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: case-study-service
+spec:
+  selector:
+    app: flask
+  ports:
+  - protocol: "TCP"
+    port: 6000
+    targetPort: 8080
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: case-study-cluster
+spec:
+  selector:
+    matchLabels:
+      app: flask
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+      - name: case-study-cluster
+        image: annaarakeyan/case-study-project
+        ports:
+        - containerPort: 8080
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]
